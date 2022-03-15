@@ -7,9 +7,7 @@ import store from './store'
 
 // 引入全局组件
 import TypeNav from '@/components/TypeNav'
-import {reqCategoryList} from '@/api'
 
-reqCategoryList()
 // 注册全局组件
 Vue.component(TypeNav.name, TypeNav)
 
