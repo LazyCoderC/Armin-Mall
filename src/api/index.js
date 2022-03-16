@@ -4,6 +4,4 @@
 import requests from './request'
 
 
-export const reqCategoryList = ()=> {
-  requests({url: 'product/getBaseCategoryList', methods: 'get'})
-}
+export const reqCategoryList = () => requests({url: 'product/getBaseCategoryList', methods: 'get'})
