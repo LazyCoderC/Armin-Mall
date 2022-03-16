@@ -57,6 +57,8 @@
 
 <script>
 import { mapState } from "vuex";
+// 引入loadsh节流模块
+import throttle from "lodash/throttle"
 export default {
   name: "TypeNav",
   data() {
@@ -73,9 +75,9 @@ export default {
     }),
   },
   methods: {
-    changeIndex(index) {
+    changeIndex: throttle(function(index){
       this.currentIndex = index;
-    },
+    },60),
     removeCurrentIndex() {
       this.currentIndex = null;
     },
