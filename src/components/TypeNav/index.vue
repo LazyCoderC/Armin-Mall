@@ -4,7 +4,7 @@
       <div @mouseleave="removeCurrentIndex">
         <h2 class="all">全部商品分类</h2>
         <div class="sort">
-          <div class="all-sort-list2">
+          <div class="all-sort-list2" @click="goSearch">
             <div
               class="item"
               v-for="(c1, index) in categoryList"
@@ -13,7 +13,11 @@
             >
               <!-- 一级分类 -->
               <h3 @mouseenter="changeIndex(index)">
-                <a href="">{{ c1.categoryName }}</a>
+                <a
+                  :data-categoryName="c1.categoryName"
+                  :data-category1Id="c1.categoryId"
+                  >{{ c1.categoryName }}</a
+                >
               </h3>
               <!-- 二三级分类 -->
               <div
@@ -27,11 +31,19 @@
                 >
                   <dl class="fore">
                     <dt>
-                      <a href="">{{ c2.categoryName }}</a>
+                      <a
+                        :data-categoryName="c2.categoryName"
+                        :data-category2Id="c2.categoryId"
+                        >{{ c2.categoryName }}</a
+                      >
                     </dt>
                     <dd>
                       <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                        <a href="">{{ c3.categoryName }}</a>
+                        <a
+                          :data-categoryName="c3.categoryName"
+                          :data-category3Id="c3.categoryId"
+                          >{{ c3.categoryName }}</a
+                        >
                       </em>
                     </dd>
                   </dl>
@@ -58,7 +70,7 @@
 <script>
 import { mapState } from "vuex";
 // 引入loadsh节流模块
-import throttle from "lodash/throttle"
+import throttle from "lodash/throttle";
 export default {
   name: "TypeNav",
   data() {
@@ -75,11 +87,28 @@ export default {
     }),
   },
   methods: {
-    changeIndex: throttle(function(index){
+    changeIndex: throttle(function (index) {
       this.currentIndex = index;
-    },60),
+    }, 60),
     removeCurrentIndex() {
       this.currentIndex = null;
+    },
+    goSearch(event) {
+      let element = event.target;
+      let { categoryname, category1id, category2id, category3id } = element.dataset;
+      if (categoryname) {
+        let location = {name: "search"}
+        let query = {categoryName: categoryname}
+        if (category1id) {
+          query.category1Id = category1id
+        } else if (category2id) {
+          query.category2Id = category2id
+        } else if (category3id) {
+          query.category3Id = category3id
+        }
+        location.query = query
+        this.$router.push(location)
+      }
     },
   },
 };
