@@ -1,57 +1,59 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="removeCurrentIndex">
+      <div @mouseleave="removeCurrentIndex" @mouseenter="showSort">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <div class="all-sort-list2" @click="goSearch">
-            <div
-              class="item"
-              v-for="(c1, index) in categoryList"
-              :key="c1.categoryId"
-              :class="{ cur: currentIndex == index }"
-            >
-              <!-- 一级分类 -->
-              <h3 @mouseenter="changeIndex(index)">
-                <a
-                  :data-categoryName="c1.categoryName"
-                  :data-category1Id="c1.categoryId"
-                  >{{ c1.categoryName }}</a
-                >
-              </h3>
-              <!-- 二三级分类 -->
+        <transition name="sort">
+          <div class="sort" v-show="sortShow">
+            <div class="all-sort-list2" @click="goSearch">
               <div
-                class="item-list clearfix"
-                :style="{ display: currentIndex == index ? 'block' : 'none' }"
+                class="item"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                :class="{ cur: currentIndex == index }"
               >
+                <!-- 一级分类 -->
+                <h3 @mouseenter="changeIndex(index)">
+                  <a
+                    :data-categoryName="c1.categoryName"
+                    :data-category1Id="c1.categoryId"
+                    >{{ c1.categoryName }}</a
+                  >
+                </h3>
+                <!-- 二三级分类 -->
                 <div
-                  class="subitem"
-                  v-for="c2 in c1.categoryChild"
-                  :key="c2.categoryId"
+                  class="item-list clearfix"
+                  :style="{ display: currentIndex == index ? 'block' : 'none' }"
                 >
-                  <dl class="fore">
-                    <dt>
-                      <a
-                        :data-categoryName="c2.categoryName"
-                        :data-category2Id="c2.categoryId"
-                        >{{ c2.categoryName }}</a
-                      >
-                    </dt>
-                    <dd>
-                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                  <div
+                    class="subitem"
+                    v-for="c2 in c1.categoryChild"
+                    :key="c2.categoryId"
+                  >
+                    <dl class="fore">
+                      <dt>
                         <a
-                          :data-categoryName="c3.categoryName"
-                          :data-category3Id="c3.categoryId"
-                          >{{ c3.categoryName }}</a
+                          :data-categoryName="c2.categoryName"
+                          :data-category2Id="c2.categoryId"
+                          >{{ c2.categoryName }}</a
                         >
-                      </em>
-                    </dd>
-                  </dl>
+                      </dt>
+                      <dd>
+                        <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                          <a
+                            :data-categoryName="c3.categoryName"
+                            :data-category3Id="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -76,10 +78,14 @@ export default {
   data() {
     return {
       currentIndex: null,
+      sortShow: true,
     };
   },
   mounted() {
     this.$store.dispatch("categoryList");
+    if (this.$route.path != "/home") {
+      this.sortShow = false;
+    }
   },
   computed: {
     ...mapState({
@@ -92,22 +98,29 @@ export default {
     }, 60),
     removeCurrentIndex() {
       this.currentIndex = null;
+      if (this.$route.path != "/home") {
+        this.sortShow = false;
+      }
+    },
+    showSort() {
+      this.sortShow = true;
     },
     goSearch(event) {
       let element = event.target;
-      let { categoryname, category1id, category2id, category3id } = element.dataset;
+      let { categoryname, category1id, category2id, category3id } =
+        element.dataset;
       if (categoryname) {
-        let location = {name: "search"}
-        let query = {categoryName: categoryname}
+        let location = { name: "search" };
+        let query = { categoryName: categoryname };
         if (category1id) {
-          query.category1Id = category1id
+          query.category1Id = category1id;
         } else if (category2id) {
-          query.category2Id = category2id
+          query.category2Id = category2id;
         } else if (category3id) {
-          query.category3Id = category3id
+          query.category3Id = category3id;
         }
-        location.query = query
-        this.$router.push(location)
+        location.query = query;
+        this.$router.push(location);
       }
     },
   },
@@ -234,6 +247,21 @@ export default {
           background: skyblue;
         }
       }
+    }
+    .sort-enter {
+      height: 0px;
+    }
+    .sort-enter-to {
+      height: 461px;
+    }
+    .sort-enter-active {
+      // transition参数说明
+      // 第一个参数为规定设置过渡效果的css属性名称
+      // 第二个参数为过滤效果需要的时间
+      // 第三个参数为指定过滤的函数效果
+      // 第四个参数为过滤效果延迟时间
+      transition: all .3s linear;
+      overflow: hidden;
     }
   }
 }
