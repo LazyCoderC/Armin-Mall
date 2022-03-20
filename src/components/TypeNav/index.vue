@@ -119,6 +119,10 @@ export default {
           query.category3Id = category3id;
         }
         location.query = query;
+        // 判断当前路由是否带有params参数，有则带上一起传参
+        if (this.$route.params){
+          location.params = this.$route.params
+        }
         this.$router.push(location);
       }
     },

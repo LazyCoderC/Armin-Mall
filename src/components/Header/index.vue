@@ -66,11 +66,20 @@ export default {
       // 第二种:模板字符串
       // this.$router.push(`/search/${this.keyWord}?keyWord=${this.keyWord.toUpperCase()}`)
       // 第三种:对象
-      this.$router.push({
-        path: '/search',
-        params: { keyWord: this.keyWord },
-        query: { keyWord: this.keyWord.toUpperCase() },
-      });
+      // this.$router.push({
+      //   name: "search",
+      //   params: { keyWord: this.keyWord || undefined },
+      //   query: { keyWord: this.keyWord },
+      // });
+      let location = {
+        name: "search",
+        params: { keyWord: this.keyWord || undefined },
+      };
+      // 如果route有query，在点击搜索的时候带上已有的query参数
+      if (this.$route.query) {
+        location.query = this.$route.query;
+      }
+      this.$router.push(location);
     },
   },
 };
