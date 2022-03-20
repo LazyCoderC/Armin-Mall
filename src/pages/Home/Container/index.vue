@@ -5,22 +5,16 @@
         <!--banner轮播-->
         <div class="swiper-container" id="mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
+            <div
+              class="swiper-slide"
+              v-for="carousel in bannerList"
+              :key="carousel.id"
+            >
+              <img :src="carousel.imgUrl" />
             </div>
-            <!-- <div class="swiper-slide">
-              <img src="./images/banner2.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner3.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner4.jpg" />
-            </div> -->
           </div>
           <!-- 如果需要分页器 -->
           <div class="swiper-pagination"></div>
-
           <!-- 如果需要导航按钮 -->
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
@@ -101,16 +95,41 @@
 
 <script>
 import { mapState } from "vuex";
+import Swiper from "swiper";
 export default {
   name: "Container",
   mounted() {
-    this.$store.dispatch("getBannerList")
+    this.$store.dispatch("getBannerList");
   },
   computed: {
     ...mapState({
-      getBannerList: (state) => state.home.getBannerList
-    })
-  }
+      bannerList: (state) => state.home.getBannerList,
+    }),
+  },
+  watch: {
+    // 使用watch监听bannerList数据是否替换为服务器返回的数据
+    bannerList: {
+      handler(newValue, oldValue) {
+        // 使用$nextTick等待数据同步到Dom上再使用swiper操作dom
+        this.$nextTick(() => {
+          var mySwiper = new Swiper(".swiper-container", {
+            loop: true, // 循环模式选项
+
+            // 如果需要分页器
+            pagination: {
+              el: ".swiper-pagination",
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+          });
+        });
+      },
+    },
+  },
 };
 </script>
 
