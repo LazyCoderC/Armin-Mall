@@ -5,8 +5,12 @@
         <h3 class="fl">{{ list.name }}</h3>
         <div class="fr">
           <ul class="nav-tabs clearfix">
-            <li :class="{active:navIndex==index}" v-for="(nav, index) in list.navList" :key="index">
-              <a @click="navActive(index)" data-toggle="tab">{{nav.text}}</a>
+            <li
+              :class="{ active: navIndex == index }"
+              v-for="(nav, index) in list.navList"
+              :key="index"
+            >
+              <a @click="navActive(index)" data-toggle="tab">{{ nav.text }}</a>
             </li>
           </ul>
         </div>
@@ -23,18 +27,7 @@
               <img :src="list.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" ref="floor1Swiper">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide" v-for="carouselList in list.carouselList" :key="carouselList.id">
-                    <img :src="carouselList.imgUrl" />
-                  </div>
-                </div>
-                <!-- 如果需要分页器 -->
-                <div class="swiper-pagination"></div>
-                <!-- 如果需要导航按钮 -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-              </div>
+              <Carousel :list='list.carouselList'></Carousel>
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -65,35 +58,18 @@
 </template>
 
 <script>
-import Swiper from "swiper";
 export default {
   name: "Floor",
-  data(){
+  data() {
     return {
-      navIndex: 0
-    }
+      navIndex: 0,
+    };
   },
   props: ["list"],
   methods: {
     navActive(index) {
-      this.navIndex = index
-    }
-  },
-  mounted() {
-    var mySwiper = new Swiper(this.$refs.floor1Swiper, {
-      loop: true, // 循环模式选项
-
-      // 如果需要分页器
-      pagination: {
-        el: ".swiper-pagination",
-      },
-
-      // 如果需要前进后退按钮
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-    });
+      this.navIndex = index;
+    },
   },
 };
 </script>
