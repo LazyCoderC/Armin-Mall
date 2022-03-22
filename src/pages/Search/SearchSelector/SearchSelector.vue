@@ -27,9 +27,12 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   export default {
     name: 'SearchSelector',
-    props:['attrsList', 'trademarkList']
+    computed: {
+      ...mapGetters(['trademarkList','attrsList'])
+    }
   }
 </script>
 
