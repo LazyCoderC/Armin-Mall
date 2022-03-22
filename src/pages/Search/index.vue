@@ -159,6 +159,21 @@ export default {
   computed: {
     ...mapGetters(["goodsList"]),
   },
+  watch: {
+    $route: {
+      handler() {
+        // 先把上次的id置空，以免造成没有覆盖的情况
+        this.searchParams.category1Id = ''
+        this.searchParams.category2Id = ''
+        this.searchParams.category3Id = ''
+
+        // 合并路由params和query参数到searchParams
+        Object.assign(this.searchParams, this.$route.params, this.$route.query)
+        // 发送请求
+        this.getSearchList()
+      }
+    }
+  }
 };
 </script>
 
