@@ -19,7 +19,7 @@
         </div>
 
         <!--selector-->
-        <SearchSelector/>
+        <SearchSelector />
 
         <!--details-->
         <div class="details clearfix">
@@ -128,11 +128,33 @@ import { mapGetters } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 export default {
   name: "Search",
+  data() {
+    return {
+      searchParams: {
+        category3Id: "",
+        categoryName: "",
+        keyword: "",
+        order: "1:asc",
+        pageNo: 1,
+        pageSize: 10,
+        props: [],
+        trademark: "",
+      },
+    };
+  },
   components: {
     SearchSelector,
   },
+  beforeMount(){
+    Object.assign(this.searchParams, this.$route.params, this.$route.query)
+  },
   mounted() {
-    this.$store.dispatch("getSearchList");
+    this.getSearchList()
+  },
+  methods: {
+    getSearchList() {
+      this.$store.dispatch("getSearchList", this.searchParams);
+    },
   },
   computed: {
     ...mapGetters(["goodsList"]),
