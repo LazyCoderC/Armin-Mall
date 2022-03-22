@@ -73,7 +73,7 @@ export default {
       // });
       let location = {
         name: "search",
-        params: { keyWord: this.keyWord || undefined },
+        params: { keyword: this.keyWord || undefined },
       };
       // 如果route有query，在点击搜索的时候带上已有的query参数
       if (this.$route.query) {
