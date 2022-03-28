@@ -9,7 +9,8 @@
           v-if="
             this.searchParams.categoryName ||
             this.searchParams.keyword ||
-            this.searchParams.trademark
+            this.searchParams.trademark ||
+            this.searchParams.props.length != 0
           "
         >
           <ul class="fl sui-breadcrumb">
@@ -33,11 +34,19 @@
               {{ this.searchParams.trademark.split(":")[1]
               }}<i @click="removeBreadTrademark">x</i>
             </li>
+            <!-- 显示属性的面包屑 -->
+            <li
+              class="with-x"
+              v-for="(attr, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attr.split(":")[1] }}<i @click="removeBreadAttr(index)">x</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo" />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -201,6 +210,17 @@ export default {
       this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
       // 发送请求
       this.getSearchList();
+    },
+    attrInfo(attr, attrValue) {
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      if (this.searchParams.props.indexOf(props) == -1) {
+        this.searchParams.props.push(props);
+        this.getSearchList();
+      }
+    },
+    removeBreadAttr(index) {
+      this.searchParams.props.splice(index, 1)
+      this.getSearchList()
     },
   },
   computed: {
