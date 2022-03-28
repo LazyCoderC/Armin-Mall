@@ -4,22 +4,40 @@
     <div class="main">
       <div class="py-container">
         <!--bread面包屑-->
-        <div class="bread">
+        <div
+          class="bread"
+          v-if="
+            this.searchParams.categoryName ||
+            this.searchParams.keyword ||
+            this.searchParams.trademark
+          "
+        >
           <ul class="fl sui-breadcrumb">
             <li>
               <a href="#">全部结果</a>
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <!-- 显示categoryName三级联动的面包屑 -->
+            <li class="with-x" v-if="this.searchParams.categoryName">
+              {{ this.searchParams.categoryName
+              }}<i @click="removeBreadCategoryName">x</i>
+            </li>
+            <!-- 显示keyword关键字的面包屑 -->
+            <li class="with-x" v-if="this.searchParams.keyword">
+              {{ this.searchParams.keyword
+              }}<i @click="removeBreadKeyword">x</i>
+            </li>
+            <!-- 显示品牌的面包屑 -->
+            <li class="with-x" v-if="this.searchParams.trademark">
+              {{ this.searchParams.trademark.split(":")[1]
+              }}<i @click="removeBreadTrademark">x</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -145,15 +163,44 @@ export default {
   components: {
     SearchSelector,
   },
-  beforeMount(){
-    Object.assign(this.searchParams, this.$route.params, this.$route.query)
+  beforeMount() {
+    Object.assign(this.searchParams, this.$route.params, this.$route.query);
   },
   mounted() {
-    this.getSearchList()
+    this.getSearchList();
   },
   methods: {
     getSearchList() {
       this.$store.dispatch("getSearchList", this.searchParams);
+    },
+    // 删除三级选项面包屑
+    removeBreadCategoryName() {
+      this.searchParams.categoryName = undefined;
+      let location = {
+        name: "search",
+        params: { keyword: this.searchParams.keyword || undefined },
+      };
+      this.$router.push(location);
+    },
+    // 删除关键字面包屑
+    removeBreadKeyword() {
+      this.searchParams.keyword = undefined;
+      let location = {
+        name: "search",
+        query: this.$route.query,
+      };
+      this.$router.push(location);
+    },
+    // 删除品牌面包屑
+    removeBreadTrademark() {
+      this.searchParams.trademark = "";
+      this.getSearchList();
+    },
+    trademarkInfo(trademark) {
+      // 整理参数
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      // 发送请求
+      this.getSearchList();
     },
   },
   computed: {
@@ -163,17 +210,17 @@ export default {
     $route: {
       handler() {
         // 先把上次的id置空，以免造成没有覆盖的情况
-        this.searchParams.category1Id = ''
-        this.searchParams.category2Id = ''
-        this.searchParams.category3Id = ''
+        this.searchParams.category1Id = undefined;
+        this.searchParams.category2Id = undefined;
+        this.searchParams.category3Id = undefined;
 
         // 合并路由params和query参数到searchParams
-        Object.assign(this.searchParams, this.$route.params, this.$route.query)
+        Object.assign(this.searchParams, this.$route.params, this.$route.query);
         // 发送请求
-        this.getSearchList()
-      }
-    }
-  }
+        this.getSearchList();
+      },
+    },
+  },
 };
 </script>
 

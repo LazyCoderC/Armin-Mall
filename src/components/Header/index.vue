@@ -82,6 +82,15 @@ export default {
       this.$router.push(location);
     },
   },
+  watch: {
+    $route: {
+      handler() {
+        if(this.$route.params.keyword == undefined){
+          this.keyWord = ""
+        }
+      }
+    }
+  }
 };
 </script>
 
