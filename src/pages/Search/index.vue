@@ -53,23 +53,23 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: activeIsOne }" @click="changeOrder('1')">
+                  <a
+                    >综合<span
+                      v-show="activeIsOne"
+                      class="iconfont"
+                      :class="orderIsUp ? 'icon-sort_up' : 'icon-sort_down'"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: !activeIsOne }" @click="changeOrder('2')">
+                  <a
+                    >价格<span
+                      v-show="!activeIsOne"
+                      class="iconfont"
+                      :class="orderIsUp ? 'icon-sort_up' : 'icon-sort_down'"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -161,7 +161,7 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "1:asc",
+        order: "1:desc",
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -219,12 +219,29 @@ export default {
       }
     },
     removeBreadAttr(index) {
-      this.searchParams.props.splice(index, 1)
-      this.getSearchList()
+      this.searchParams.props.splice(index, 1);
+      this.getSearchList();
+    },
+    // 修改排序、类型并请求数据
+    changeOrder(flag) {
+      if (this.searchParams.order.indexOf(flag) != -1) {
+        this.searchParams.order = `${flag}:${
+          this.searchParams.order.indexOf("asc") != -1 ? "desc" : "asc"
+        }`;
+      } else {
+        this.searchParams.order = `${flag}:desc`;
+      }
+      this.getSearchList();
     },
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    activeIsOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    orderIsUp() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
   },
   watch: {
     $route: {
