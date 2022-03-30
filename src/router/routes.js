@@ -21,7 +21,7 @@ export default [
     name: 'search'
   }, 
   {
-    path: '/detail/:skuid',
+    path: '/detail/:skuId',
     component: Detail,
     meta: {
       show: true

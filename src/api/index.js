@@ -13,3 +13,6 @@ export const reqFloorList = () => mockRequests({ url: '/floor', method: 'get' })
 
 // 获取searchList数据
 export const reqSearchInfo = (params) => requests({ url: '/list', method: 'post', data: params })
+
+// 获取商品详情数据
+export const reqGoodInfo = (skuId) => requests({ url: `/item/${skuId}`, method: 'get' })
