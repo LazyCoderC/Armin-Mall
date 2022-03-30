@@ -1,11 +1,11 @@
 <template>
   <div class="spec-preview">
     <img :src="imgInfo.imgUrl" />
-    <div class="event"></div>
+    <div class="event" @mousemove="handler"></div>
     <div class="big">
-      <img :src="imgInfo.imgUrl" />
+      <img :src="imgInfo.imgUrl" ref="big" />
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
@@ -13,11 +13,48 @@
 export default {
   name: "Zoom",
   props: ["skuImageList"],
+  data() {
+    return {
+      currentIndex: 0,
+    };
+  },
+  methods: {
+    handler(event) {
+      // 获取蒙版元素
+      let mask = this.$refs.mask;
+      // 获取放大图元素
+      let big = this.$refs.big;
+      // 获取鼠标在图片中的位置并 - 蒙版的宽度的一半，得到实际蒙版需要的偏移量
+      let left = event.offsetX - mask.offsetWidth / 2;
+      let top = event.offsetY - mask.offsetHeight / 2;
+
+      // 设置不允许蒙版跑出图片
+      if (left <= 0) left = 0;
+      if (left >= mask.offsetWidth) left = mask.offsetWidth;
+      if (top <= 0) top = 0;
+      if (top >= mask.offsetHeight) top = mask.offsetHeight;
+
+      mask.style.left = left + "px";
+      mask.style.top = top + "px";
+
+      //因为放大图是普通图的两倍，所以普通图移动1像素就得*2
+      big.style.left = -2 * left + "px";
+      big.style.top = -2 * top + "px";
+
+      // console.log(mask.style);
+    },
+  },
   computed: {
     // 处理数据，确保如果数据没有请求回来的情况下不为undefined
     imgInfo() {
-      return this.skuImageList[0] || {}
+      return this.skuImageList[this.currentIndex] || {};
     },
+  },
+  mounted() {
+    // 接受ImageList全局事件总线传来的index对应更换图片展示
+    this.$bus.$on("getCurrentIndexOfDetailSwiper", (index) => {
+      this.currentIndex = index;
+    });
   },
 };
 </script>

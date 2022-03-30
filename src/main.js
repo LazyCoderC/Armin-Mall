@@ -23,8 +23,12 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
-// 注册路由
+  // 注册路由
   router,
-// 注册vuex
-  store
+  // 注册vuex
+  store,
+  beforeCreate() {
+    // 配置全局事件总线
+    Vue.prototype.$bus = this
+  }
 }).$mount('#app')
