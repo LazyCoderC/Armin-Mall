@@ -115,7 +115,7 @@
               </li>
             </ul>
           </div>
-          <Pagination></Pagination>
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @getPageNo="getPageNo"></Pagination>
         </div>
       </div>
     </div>
@@ -123,13 +123,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { start } from 'nprogress';
+import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 export default {
   name: "Search",
   data() {
     return {
       searchParams: {
+        category1Id: "",
+        category2Id: "",
         category3Id: "",
         categoryName: "",
         keyword: "",
@@ -205,9 +208,17 @@ export default {
       }
       this.getSearchList();
     },
+    // 通过子传夫事件获取分页器点击的页数
+    getPageNo(pageNo){
+      this.searchParams.pageNo = pageNo
+      this.getSearchList()
+    }
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    ...mapState({
+      total: state => state.search.searchList.total
+    }),
     activeIsOne() {
       return this.searchParams.order.indexOf("1") != -1;
     },
