@@ -9,7 +9,9 @@
     <button
       v-for="(page, index) in pageStartAndEnd.range"
       :key="index"
+      :disabled="page == pageNo"
       @click="$emit('getPageNo', page)"
+      :class="{active: page == pageNo}"
     >
       {{ page }}
     </button>
@@ -97,7 +99,7 @@ export default {
 
     &.active {
       cursor: not-allowed;
-      background-color: #409eff;
+      background-color: rgb(238, 15, 219);
       color: #fff;
     }
   }
