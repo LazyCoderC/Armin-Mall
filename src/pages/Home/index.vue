@@ -20,8 +20,6 @@ import Like from "./Like";
 import Floor from "./Floor";
 import Brand from "./Brand";
 
-// 引入swiper样式
-import "swiper/css/swiper.css";
 
 export default {
   name: "Home",

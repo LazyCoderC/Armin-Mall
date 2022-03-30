@@ -9,7 +9,8 @@ import store from './store'
 import TypeNav from '@/components/TypeNav'
 import Carousel from '@/components/Carousel'
 import Pagination from '@/components/Pagination'
-
+// 引入swiper样式
+import "swiper/css/swiper.css";
 // 引入mock假数据插件执行代码
 import '@/mock/mockServe'
 
