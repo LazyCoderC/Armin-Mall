@@ -10,16 +10,22 @@
 </template>
 
 <script>
+// 导入节流模块
+import throttle from "lodash/throttle";
 export default {
   name: "Zoom",
   props: ["skuImageList"],
   data() {
     return {
       currentIndex: 0,
+      // // 测试节流代码
+      // ceshi: 0,
+      // ceshi2: {},
+      // zuizhong: 0
     };
   },
   methods: {
-    handler(event) {
+    handler: throttle(function (event) {
       // 获取蒙版元素
       let mask = this.$refs.mask;
       // 获取放大图元素
@@ -40,9 +46,27 @@ export default {
       //因为放大图是普通图的两倍，所以普通图移动1像素就得*2
       big.style.left = -2 * left + "px";
       big.style.top = -2 * top + "px";
+    }, 16),
 
-      // console.log(mask.style);
-    },
+    // //测试节流代码 
+    // handler(event) {
+    //   this.ceshi += 1;
+    //   this.ceshi2.ceshi
+    //     ? ""
+    //     : setTimeout(() => {
+    //         this.zuizhong = this.ceshi;
+    //       }, 1000);
+    //   this.ceshi2.ceshi = 1321;
+    // },
+    // handler: throttle(function () {
+    //   this.ceshi += 1;
+    //   this.ceshi2.ceshi
+    //     ? ""
+    //     : setTimeout(() => {
+    //         this.zuizhong = this.ceshi;
+    //       }, 1000);
+    //   this.ceshi2.ceshi = 1321;
+    // }, 10),
   },
   computed: {
     // 处理数据，确保如果数据没有请求回来的情况下不为undefined
