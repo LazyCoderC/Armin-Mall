@@ -111,7 +111,7 @@
                 >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addShoppingCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -382,6 +382,22 @@ export default {
       } else {
         this.skuNum = Math.ceil(changeNum);
       }
+    },
+    addShoppingCart() {
+      let result = this.$store.dispatch("addOrUpdateInShoppingCart", {
+        skuId: this.$route.params.skuId,
+        skuName: this.skuNum,
+      });
+      // 利用async函数返回promise特点判断是否成功
+      result
+        .then((req) => {
+          this.$router.push({ name: "addcartsuccess", query: {skuNum: this.skuNum}});
+          sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo))
+          sessionStorage.setItem("SPUSALEATTRLIST", JSON.stringify(this.spuSaleAttrList))
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
     },
   },
   mounted() {

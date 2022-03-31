@@ -1,5 +1,5 @@
 // 引入请求商品详情的api请求
-import { reqGoodInfo } from "@/api"
+import { reqAddOrUpdateInShoppingCart, reqGoodInfo } from "@/api"
 
 const state = {
   goodInfo: {}
@@ -16,6 +16,14 @@ const actions = {
     if (result.code == 200) {
       commit("GETGOODINFO", result.data)
     }
+  },
+  async addOrUpdateInShoppingCart({ commit }, { skuId, skuName }) {
+    let result = await reqAddOrUpdateInShoppingCart(skuId, skuName)
+    if (result.code == 200) {
+      return "OK"
+    } else {
+      return Promise.reject(new Error('fail'))
+    }
   }
 }
 const getters = {
@@ -25,7 +33,7 @@ const getters = {
   skuInfo(state) {
     return state.goodInfo.skuInfo || {}
   },
-  spuSaleAttrList (state){
+  spuSaleAttrList(state) {
     return state.goodInfo.spuSaleAttrList || []
   }
 }
