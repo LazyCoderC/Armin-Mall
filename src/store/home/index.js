@@ -1,8 +1,9 @@
-import { reqCategoryList, reqBannerList } from '@/api'
+import { reqCategoryList, reqBannerList, reqFloorList } from '@/api'
 // vuex模块
 const state = {
   categoryList: [],
-  getBannerList: []
+  getBannerList: [],
+  getFloorList: []
 }
 const mutations = {
   CATEGORYLIST(state, categoryList) {
@@ -10,6 +11,9 @@ const mutations = {
   },
   GETBANNERLIST(state, getBannerList) {
     state.getBannerList = getBannerList
+  },
+  GETFLOORLIST(state, getFloorList) {
+    state.getFloorList = getFloorList
   }
 }
 const actions = {
@@ -24,6 +28,12 @@ const actions = {
     let result = await reqBannerList()
     if (result.code == 200) {
       commit('GETBANNERLIST', result.data)
+    }
+  },
+  async getFloorList({ commit }) {
+    let result = await reqFloorList()
+    if (result.code == 200) {
+      commit('GETFLOORLIST', result.data)
     }
   }
 }
